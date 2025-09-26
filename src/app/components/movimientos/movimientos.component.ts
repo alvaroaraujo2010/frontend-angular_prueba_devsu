@@ -14,13 +14,14 @@ export class MovimientosComponent implements OnInit {
   movimientos: any[] = [];
   loading = false;
   seleccionado: any = null;
-  reporte: any = null;
+  reporte: EstadoCuentaReporte | null = null;
 
   constructor(private fb: FormBuilder, private svc: MovimientosService) {
     this.form = this.fb.group({
       numeroCuenta: ['', Validators.required],
       tipo: ['DEBITO', Validators.required],
-      valor: [0, [Validators.required, Validators.min(0.01)]]
+      valor: [0, [Validators.required, Validators.min(0.01)]],
+      referencia: [''] // opcional
     });
   }
 
@@ -32,6 +33,7 @@ export class MovimientosComponent implements OnInit {
     this.loading = true;
     this.svc.listarTodos().subscribe({
       next: (res) => {
+        console.log(res);
         this.movimientos = res;
         this.loading = false;
       },
@@ -48,7 +50,9 @@ export class MovimientosComponent implements OnInit {
       return;
     }
 
-    this.svc.crearMovimiento(this.form.value).subscribe({
+    const { numeroCuenta, tipo, valor, referencia } = this.form.value;
+
+    this.svc.crearMovimiento(numeroCuenta, tipo, valor, referencia).subscribe({
       next: () => {
         alert('Movimiento registrado con éxito');
         this.form.reset({ tipo: 'DEBITO', valor: 0 });
@@ -56,7 +60,7 @@ export class MovimientosComponent implements OnInit {
       },
       error: (err) => {
         console.error(err);
-        alert('Error al registrar el movimiento: ' + (err.error?.message || JSON.stringify(err.error)));
+        alert('Error al registrar el movimiento: ' + (err.error?.error || JSON.stringify(err.error)));
       }
     });
   }
@@ -71,9 +75,24 @@ export class MovimientosComponent implements OnInit {
     this.svc.generarReporte(numeroCuenta).subscribe({
       next: (data) => {
         this.reporte = data;
-        const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet([data]);
+
+        const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet([
+          {
+            NumeroCuenta: data.numeroCuenta,
+            TipoCuenta: data.tipoCuenta,
+            Cliente: data.cliente,
+            FechaDesde: data.fechaDesde,
+            FechaHasta: data.fechaHasta,
+            TotalCreditos: data.totalCreditos,
+            TotalDebitos: data.totalDebitos,
+            SaldoFinal: data.saldoFinal
+          }
+        ]);
+
+        const wsMovimientos: XLSX.WorkSheet = XLSX.utils.json_to_sheet(data.movimientos);
         const wb: XLSX.WorkBook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, 'Reporte');
+        XLSX.utils.book_append_sheet(wb, ws, 'Resumen');
+        XLSX.utils.book_append_sheet(wb, wsMovimientos, 'Movimientos');
 
         const excelBuffer: any = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
         const file: Blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
@@ -88,9 +107,10 @@ export class MovimientosComponent implements OnInit {
 
   seleccionarMovimiento(movimiento: any) {
     this.form.patchValue({
-      numeroCuenta: movimiento.numeroCuenta,
-      tipo: movimiento.tipoMovimiento,
-      valor: movimiento.valorMovimiento
+      numeroCuenta: movimiento.cuenta?.numero ?? this.form.get('numeroCuenta')?.value,
+      tipo: movimiento.cuenta?.tipoMovimiento,
+      valor: movimiento.valor,
+      referencia: movimiento.referencia
     });
   }
 }

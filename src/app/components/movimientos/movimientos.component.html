@@ -71,14 +71,14 @@
       <tbody>
         <tr *ngFor="let m of movimientos" (click)="seleccionarMovimiento(m)" style="cursor: pointer;" [class.table-active]="m === seleccionado">
           <td>{{ m.fecha | date:'dd/MM/yyyy HH:mm' }}</td>
-          <td>{{ m.numeroCuenta }}</td>
-          <td>{{ m.tipoCuenta }}</td>
+          <td>{{ m.cuenta.numero }}</td>
+          <td>{{ m.tipo }}</td>
           <td>{{ m.tipoMovimiento }}</td>
-          <td>{{ m.cliente }}</td>
-          <td>{{ m.valorMovimiento | number:'1.2-2' }}</td>
-          <td>{{ m.saldoInicial | number:'1.2-2' }}</td>
-          <td>{{ m.saldoDisponible | number:'1.2-2' }}</td>
-          <td>{{ m.estado }}</td>
+          <td>{{ m.cuenta.clienteId }}</td>
+          <td>{{ m.valor | number:'1.2-2' }}</td>
+          <td>{{ m.cuenta.saldoInicial | number:'1.2-2' }}</td>
+          <td>{{ m.saldo | number:'1.2-2' }}</td>
+          <td>{{ m.cuenta.estado }}</td>
         </tr>
       </tbody>
     </table>
