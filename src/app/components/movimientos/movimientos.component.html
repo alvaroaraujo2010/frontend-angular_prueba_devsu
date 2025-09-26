@@ -1,0 +1,18 @@
+<div class="movimientos container">
+  <h2>Movimientos</h2>
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <input formControlName="numeroCuenta" placeholder="Número de cuenta" />
+    <div *ngIf="form.controls['numeroCuenta'].invalid && form.controls['cuentaId'].touched">
+      <small style="color:red">Debes asignar un ID de cuenta.</small>
+    </div>
+    <select formControlName="tipo">
+      <option value="DEBITO">DEBITO</option>
+      <option value="CREDITO">CREDITO</option>
+    </select>
+    <input type="number" formControlName="valor" placeholder="Valor" />
+    <div *ngIf="form.controls['valor'].invalid && form.controls['valor'].touched">
+      <small style="color:red">El valor debe ser mayor que 0.</small>
+    </div>
+    <button type="submit" [disabled]="form.invalid">Crear</button>
+  </form>
+</div>

@@ -1,0 +1,41 @@
+<div class="cuentas container">
+  <h2>Cuentas</h2>
+
+  <form [formGroup]="form">
+    <input formControlName="numero" placeholder="Número" />
+    <div *ngIf="form.controls['numero'].invalid && form.controls['numero'].touched">
+      <small style="color:red">El número es obligatorio y debe tener mínimo 5 caracteres.</small>
+    </div>
+
+    <input formControlName="tipo" placeholder="Tipo" />
+    <div *ngIf="form.controls['tipo'].invalid && form.controls['tipo'].touched">
+      <small style="color:red">El tipo es obligatorio.</small>
+    </div>
+
+    <input type="number" formControlName="saldoInicial" placeholder="Saldo Inicial" />
+    <div *ngIf="form.controls['saldoInicial'].invalid && form.controls['saldoInicial'].touched">
+      <small style="color:red">El saldo inicial debe ser mayor o igual a 0.</small>
+    </div>
+
+    <input formControlName="clienteId" placeholder="Cliente ID" />
+    <div *ngIf="form.controls['clienteId'].invalid && form.controls['clienteId'].touched">
+      <small style="color:red">Debes asignar un Cliente ID.</small>
+    </div>
+
+    <div>
+      <button type="button" [disabled]="form.invalid" (click)="crear()">Crear</button>
+      <button type="button" [disabled]="form.invalid" (click)="actualizar()">Actualizar</button>
+      <button type="button" [disabled]="form.invalid" (click)="eliminar()">Eliminar</button>
+    </div>
+  </form>
+
+  <ul>
+    <li
+      *ngFor="let c of cuentas"
+      (click)="seleccionarCuenta(c)"
+      [class.selected]="c.id === cuentaSeleccionada?.id"
+    >
+      {{ c.numero }} - {{ c.tipo }} - Cliente: {{ c.cliente?.nombre }}
+    </li>
+  </ul>
+</div>

@@ -1,0 +1,29 @@
+<div class="clientes container">
+  <h2>Clientes</h2>
+  <form [formGroup]="form" >
+    <input formControlName="nombre" placeholder="Nombre" />
+    <input formControlName="email" placeholder="Email" />
+    <input formControlName="telefono" placeholder="Teléfono" />
+    <div *ngIf="form.controls['telefono'].invalid && form.controls['telefono'].touched">
+      <small style="color:red">El teléfono debe tener entre 7 y 20 caracteres.</small>
+    </div>
+    <input formControlName="identificacion" placeholder="Identificación" />
+
+    <div>
+        <button type="button" [disabled]="form.invalid" (click)="crear()">Crear</button>
+        <button type="button" [disabled]="form.invalid">Actualizar</button>
+        <button type="button" [disabled]="form.invalid">Eliminar</button>
+    </div>
+    
+  </form>
+
+  <ul>
+    <li
+      *ngFor="let c of clientes"
+      (click)="seleccionarCliente(c)"
+      [class.selected]="c.id === clienteSeleccionado?.id"
+    >
+      {{ c.nombre }} - {{ c.identificacion }}
+    </li>
+  </ul>
+</div>
