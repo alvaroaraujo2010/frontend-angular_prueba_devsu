@@ -5,3 +5,14 @@
 li {
   cursor: pointer;
 }
+.contenedor {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 70px;
+    border: 0px;
+}
+
+.hijo {
+    padding: 20px;
+}

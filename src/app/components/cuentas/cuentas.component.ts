@@ -34,10 +34,8 @@ export class CuentasComponent implements OnInit {
       numero: c.numero,
       tipo: c.tipo,
       saldoInicial: c.saldoInicial,
-      clienteId: c.clienteId
+      clienteId: c.cliente?.nombre
     });
-
-    console.log('Cuenta seleccionada ID:', c.id);
   }
 
   crear() {

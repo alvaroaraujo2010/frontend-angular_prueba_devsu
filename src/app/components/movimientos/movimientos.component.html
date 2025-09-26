@@ -1,18 +1,87 @@
-<div class="movimientos container">
+<div class="movimientos container mt-4">
   <h2>Movimientos</h2>
-  <form [formGroup]="form" (ngSubmit)="submit()">
-    <input formControlName="numeroCuenta" placeholder="Número de cuenta" />
-    <div *ngIf="form.controls['numeroCuenta'].invalid && form.controls['cuentaId'].touched">
-      <small style="color:red">Debes asignar un ID de cuenta.</small>
+
+  <!-- Formulario -->
+  <form [formGroup]="form" (ngSubmit)="submit()" class="row g-3">
+    <div class="col-md-4">
+      <input 
+        class="form-control" 
+        formControlName="numeroCuenta" 
+        placeholder="Número de cuenta" />
+      <div *ngIf="form.controls['numeroCuenta'].invalid && form.controls['numeroCuenta'].touched">
+        <small class="text-danger">Debes ingresar un número de cuenta válido.</small>
+      </div>
     </div>
-    <select formControlName="tipo">
-      <option value="DEBITO">DEBITO</option>
-      <option value="CREDITO">CREDITO</option>
-    </select>
-    <input type="number" formControlName="valor" placeholder="Valor" />
-    <div *ngIf="form.controls['valor'].invalid && form.controls['valor'].touched">
-      <small style="color:red">El valor debe ser mayor que 0.</small>
+
+    <div class="col-md-3">
+      <select class="form-select" formControlName="tipo">
+        <option value="DEBITO">Débito</option>
+        <option value="CREDITO">Crédito</option>
+      </select>
     </div>
-    <button type="submit" [disabled]="form.invalid">Crear</button>
+
+    <div class="col-md-3">
+      <input 
+        type="number" 
+        class="form-control" 
+        formControlName="valor" 
+        placeholder="Valor" />
+      <div *ngIf="form.controls['valor'].invalid && form.controls['valor'].touched">
+        <small class="text-danger">El valor debe ser mayor que 0.</small>
+      </div>
+    </div>
+    
+    <div class="contenedor">
+      <div class="hijo">
+        <button 
+          type="submit" 
+          class="btn btn-primary flex-fill" 
+          [disabled]="form.invalid">
+          Crear
+        </button>
+        &nbsp;
+        <button 
+          type="button" 
+          class="btn btn-success flex-fill" 
+          (click)="generarReporte()">
+          Descargar Reporte
+        </button>
+      </div>
+    </div>
+    
   </form>
+
+  <!-- Tabla de movimientos -->
+  <div class="mt-5">
+    <h3>Histórico de Movimientos</h3>
+    <table class="table table-striped mt-3" *ngIf="movimientos.length > 0">
+      <thead class="table-dark">
+        <tr>
+          <th>Fecha</th>
+          <th>Número Cuenta</th>
+          <th>Tipo Cuenta</th>
+          <th>Movimiento</th>
+          <th>Numero Cliente</th>
+          <th>Valor</th>
+          <th>Saldo inicial</th>
+          <th>Saldo disponible</th>
+          <th>Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let m of movimientos" (click)="seleccionarMovimiento(m)" style="cursor: pointer;" [class.table-active]="m === seleccionado">
+          <td>{{ m.fecha | date:'dd/MM/yyyy HH:mm' }}</td>
+          <td>{{ m.numeroCuenta }}</td>
+          <td>{{ m.tipoCuenta }}</td>
+          <td>{{ m.tipoMovimiento }}</td>
+          <td>{{ m.cliente }}</td>
+          <td>{{ m.valorMovimiento | number:'1.2-2' }}</td>
+          <td>{{ m.saldoInicial | number:'1.2-2' }}</td>
+          <td>{{ m.saldoDisponible | number:'1.2-2' }}</td>
+          <td>{{ m.estado }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <p *ngIf="movimientos.length === 0" class="text-muted">No hay movimientos aún.</p>
+  </div>
 </div>

@@ -1,41 +1,79 @@
-<div class="cuentas container">
-  <h2>Cuentas</h2>
+<div class="cuentas container mt-4">
+  <h2 class="mb-4">Gestión de Cuentas</h2>
 
-  <form [formGroup]="form">
-    <input formControlName="numero" placeholder="Número" />
-    <div *ngIf="form.controls['numero'].invalid && form.controls['numero'].touched">
-      <small style="color:red">El número es obligatorio y debe tener mínimo 5 caracteres.</small>
+  <!-- Formulario -->
+  <form [formGroup]="form" class="row g-3 mb-4">
+
+    <!-- Número -->
+    <div class="col-md-6">
+      <label class="form-label">Número de Cuenta</label>
+      <input type="text" class="form-control" formControlName="numero" placeholder="Ej: 12345" />
+      <div *ngIf="form.controls['numero'].invalid && form.controls['numero'].touched">
+        <small class="text-danger">El número es obligatorio y debe tener mínimo 5 caracteres.</small>
+      </div>
     </div>
 
-    <input formControlName="tipo" placeholder="Tipo" />
-    <div *ngIf="form.controls['tipo'].invalid && form.controls['tipo'].touched">
-      <small style="color:red">El tipo es obligatorio.</small>
+    <!-- Tipo -->
+    <div class="col-md-6">
+      <label class="form-label">Tipo de Cuenta</label>
+      <input type="text" class="form-control" formControlName="tipo" placeholder="Ej: Ahorros, Corriente" />
+      <div *ngIf="form.controls['tipo'].invalid && form.controls['tipo'].touched">
+        <small class="text-danger">El tipo es obligatorio.</small>
+      </div>
     </div>
 
-    <input type="number" formControlName="saldoInicial" placeholder="Saldo Inicial" />
-    <div *ngIf="form.controls['saldoInicial'].invalid && form.controls['saldoInicial'].touched">
-      <small style="color:red">El saldo inicial debe ser mayor o igual a 0.</small>
+    <!-- Saldo Inicial -->
+    <div class="col-md-6">
+      <label class="form-label">Saldo Inicial</label>
+      <input type="number" class="form-control" formControlName="saldoInicial" placeholder="0.00" />
+      <div *ngIf="form.controls['saldoInicial'].invalid && form.controls['saldoInicial'].touched">
+        <small class="text-danger">El saldo inicial debe ser mayor o igual a 0.</small>
+      </div>
     </div>
 
-    <input formControlName="clienteId" placeholder="Cliente ID" />
-    <div *ngIf="form.controls['clienteId'].invalid && form.controls['clienteId'].touched">
-      <small style="color:red">Debes asignar un Cliente ID.</small>
+    <!-- Cliente -->
+    <div class="col-md-6">
+      <label class="form-label">Cliente</label>
+      <input type="text" class="form-control" formControlName="clienteId" placeholder="ID del cliente" />
+      <div *ngIf="form.controls['clienteId'].invalid && form.controls['clienteId'].touched">
+        <small class="text-danger">Debes asignar un Cliente ID.</small>
+      </div>
     </div>
 
-    <div>
-      <button type="button" [disabled]="form.invalid" (click)="crear()">Crear</button>
-      <button type="button" [disabled]="form.invalid" (click)="actualizar()">Actualizar</button>
-      <button type="button" [disabled]="form.invalid" (click)="eliminar()">Eliminar</button>
-    </div>
+    <diV class="contenedor">
+      <div class="hijo">
+        <button type="button" [disabled]="form.invalid" (click)="crear()">Crear</button>
+        &nbsp;
+        <button type="button" [disabled]="form.invalid" (click)="actualizar()">Actualizar</button>
+        &nbsp;
+        <button type="button" [disabled]="form.invalid" (click)="eliminar()">Eliminar</button>
+      </div>
+    </diV>
   </form>
 
-  <ul>
-    <li
-      *ngFor="let c of cuentas"
-      (click)="seleccionarCuenta(c)"
-      [class.selected]="c.id === cuentaSeleccionada?.id"
-    >
-      {{ c.numero }} - {{ c.tipo }} - Cliente: {{ c.cliente?.nombre }}
-    </li>
-  </ul>
+  <!-- Listado -->
+  <h3 class="mb-3">Listado de Cuentas</h3>
+  <table class="table table-hover table-striped">
+    <thead class="table-dark">
+      <tr>
+        <th>Número</th>
+        <th>Tipo</th>
+        <th>Saldo Inicial</th>
+        <th>Cliente</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let c of cuentas"
+          (click)="seleccionarCuenta(c)"
+          [class.table-active]="c.id === cuentaSeleccionada?.id"
+          style="cursor: pointer;">
+        <td>{{ c.numero }}</td>
+        <td>{{ c.tipo }}</td>
+        <td>{{ c.saldoInicial | currency }}</td>
+        <td>{{ c.cliente?.nombre || 'Sin asignar' }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p *ngIf="cuentas.length === 0" class="text-muted">No hay cuentas registradas.</p>
 </div>
