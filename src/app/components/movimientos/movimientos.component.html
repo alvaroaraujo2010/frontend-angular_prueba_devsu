@@ -73,11 +73,11 @@
           <td>{{ m.fecha | date:'dd/MM/yyyy HH:mm' }}</td>
           <td>{{ m.cuenta.numero }}</td>
           <td>{{ m.tipo }}</td>
-          <td>{{ m.tipoMovimiento }}</td>
-          <td>{{ m.cuenta.clienteId }}</td>
+          <td>{{ m.tipoMovimiento ?? 'DEBITO' }}</td>
+          <td>{{ m.cuenta.clienteId ?? m.cuenta.cliente.nombre }}</td>
           <td>{{ m.valor | number:'1.2-2' }}</td>
-          <td>{{ m.cuenta.saldoInicial | number:'1.2-2' }}</td>
           <td>{{ m.saldo | number:'1.2-2' }}</td>
+          <td>{{ m.cuenta.saldoInicial | number:'1.2-2' }}</td>
           <td>{{ m.cuenta.estado }}</td>
         </tr>
       </tbody>

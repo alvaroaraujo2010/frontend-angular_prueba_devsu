@@ -108,7 +108,7 @@ export class MovimientosComponent implements OnInit {
   seleccionarMovimiento(movimiento: any) {
     this.form.patchValue({
       numeroCuenta: movimiento.cuenta?.numero ?? this.form.get('numeroCuenta')?.value,
-      tipo: movimiento.cuenta?.tipoMovimiento,
+      tipo: movimiento.tipoMovimiento,
       valor: movimiento.valor,
       referencia: movimiento.referencia
     });
